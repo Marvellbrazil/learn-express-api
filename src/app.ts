@@ -36,7 +36,7 @@ app.get('/students', async (req: Request, res: Response) => {
 app.post('/students', async (req: Request, res: Response) => {
     let { first_name, last_name, gender }: CreateStudentInput = req.body;
 
-    gender = gender.toUpperCase() as "MALE" | "FEMALE";
+    gender = gender?.toUpperCase() as "MALE" | "FEMALE";
 
     // validations
     if (!first_name || !last_name) {
@@ -78,7 +78,9 @@ app.post('/students', async (req: Request, res: Response) => {
 // PUT
 app.put('/students/:id', async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { first_name, last_name, gender }: UpdateStudentInput = req.body;
+    let { first_name, last_name, gender }: UpdateStudentInput = req.body;
+
+    gender = gender?.toUpperCase() as "MALE" | "FEMALE";
 
     // validations
     if (!first_name || !last_name) {
@@ -87,7 +89,7 @@ app.put('/students/:id', async (req: Request, res: Response) => {
         });
     }
 
-    if (gender as string != "MALE" || gender as string != "FEMALE") {
+    if (!(gender == "MALE" || gender == "FEMALE")) {
         return res.status(400).json({
             error: "Gender value is invalid"
         });
@@ -98,7 +100,7 @@ app.put('/students/:id', async (req: Request, res: Response) => {
     try {
         conn = await pool.getConnection();
         query = "UPDATE students SET first_name = ?, last_name = ?, gender = ? WHERE id = ?";
-        const result = conn.query(
+        const result = await conn.query(
             query,
             [first_name, last_name, gender, id]
         );
@@ -132,7 +134,7 @@ app.delete('/students/:id', async (req: Request, res: Response) => {
     try {
         conn = await pool.getConnection();
         query = "DELETE FROM students WHERE id = ?";
-        const result = conn.query(
+        const result = await conn.query(
             query,
             [id]
         );
