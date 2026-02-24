@@ -1,6 +1,8 @@
 USE learnexpressapi_db;
 
-CREATE TABLE student (
+DROP TABLE IF EXISTS students;
+
+CREATE TABLE students (
     id INT PRIMARY KEY AUTO_INCREMENT,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,

@@ -1,9 +1,9 @@
-interface Student {
+export interface Student {
     id?: number; // ? for optional
     first_name: string;
     last_name: string;
-    gender: string;
+    gender: "MALE" | "FEMALE";
 }
 
-export default Student;
-export type StudentInput = Omit<Student, 'id'>;
+export type CreateStudentInput = Omit<Student, 'id'>;
+export type UpdateStudentInput = Partial<CreateStudentInput>;
