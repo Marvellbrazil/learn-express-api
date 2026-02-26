@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 
 // GET
-app.get('/students', async (req: Request, res: Response) => {
+app.get('/students', async (res: Response) => {
     // INIT
     let conn;
     let query;
@@ -20,10 +20,14 @@ app.get('/students', async (req: Request, res: Response) => {
         // execution
         const rows: Student[] = await conn.query(query);
         // await request's responses to return a json
-        res.json(rows);
+        res.status(200).json({
+            success: true,
+            data: rows
+        });
     } catch (error) {
         // throw rescode 500 with json containing error msgs
         res.status(500).json({
+            success: false,
             error: error
         });
     } finally {
@@ -41,12 +45,14 @@ app.post('/students', async (req: Request, res: Response) => {
     // validations
     if (!first_name || !last_name) {
         return res.status(400).json({
+            success: false,
             error: "First name or Last name cannot be blank"
         });
     }
 
     if (!(gender == "MALE" || gender == "FEMALE")) {
         return res.status(400).json({
+            success: false,
             error: "Gender value is invalid"
         });
     }
@@ -68,6 +74,7 @@ app.post('/students', async (req: Request, res: Response) => {
         });
     } catch (error) {
         res.status(500).json({
+            success: false,
             error: error
         });
     } finally {
@@ -85,12 +92,14 @@ app.put('/students/:id', async (req: Request, res: Response) => {
     // validations
     if (!first_name || !last_name) {
         return res.status(400).json({
+            success: false,
             error: "First name or Last name cannot be blank"
         });
     }
 
     if (!(gender == "MALE" || gender == "FEMALE")) {
         return res.status(400).json({
+            success: false,
             error: "Gender value is invalid"
         });
     }
@@ -118,6 +127,7 @@ app.put('/students/:id', async (req: Request, res: Response) => {
         });
     } catch (error) {
         return res.status(500).json({
+            success: false,
             error: error
         });
     } finally {
